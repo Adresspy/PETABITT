@@ -5,7 +5,7 @@ const router = express.Router();
 // ESTA FUNCION CORRESPONDE A GETALL Y GETQUERY
 
 router.get("/", async (req, res) => {
-  const { name } = req.query;
+  const name = req.query.name;
   let dogs = await getAllDogs();
 
   try {
@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
     }
     //
   } catch (error) {
-    res.status(404).send(error);
+    res.status(404).send(error.message);
   }
 });
 

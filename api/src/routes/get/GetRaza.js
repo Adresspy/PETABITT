@@ -7,14 +7,8 @@ router.get("/:id", async (req, res) => {
   try {
     const dogs = await getAllDogs();
     const perrofiltrao = await dogs.filter((ele) => ele.id === parseInt(id));
-    // console.log(perrofiltrao);
-    //
-    if (perrofiltrao.length) {
-      res.status(200).send(perrofiltrao);
-    }
-    //
-    else throw new Error(`oops... el perro con id ${id} no existe.`); // error aca
-    //
+    if (perrofiltrao.length) res.status(200).send(perrofiltrao);
+    else throw new Error(`oops... el perro con id ${id} no existe.`);
   } catch (error) {
     res.status(404).send(error);
   }
