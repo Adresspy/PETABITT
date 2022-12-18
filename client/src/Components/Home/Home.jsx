@@ -1,14 +1,21 @@
 import React from "react";
 import { useState, useEffect } from "react"; //HOOKS
 import { useDispatch, useSelector } from "react-redux"; //HOOKS REACT-REDUX
-import { getDogs } from "../../Redux/Actions"; // traemos nuestro getDogs de actions(redux)
+import { getDogs, getTemperaments, orderName } from "../../Redux/Actions"; // traemos nuestro getDogs de actions(redux)
 import { Link } from "react-router-dom"; // OJO ACA
 import Card from "../Card/Card";
 import Paginado from "../Paginado/Paginado";
+import SearchBar from "../SearchBar/SearchBar";
 
 export default function Home() {
   const dispatch = useDispatch(); // creamos nuestro dispatcheador, que nos permitira conectar con nuestro reducer
-  const allDogs = useSelector((state) => state.dogs); // y aca traemos nuestros perros, de nuestro estado (global)
+  const allDogs = useSelector((state) => state.allDogs); // y aca traemos nuestros perros, de nuestro estado (global)
+  const temperaments = useSelector((state) => state.temperaments).sort(
+    (a, b) => {
+      if (a < b) return -1;
+      else return 1;
+    }
+  );
 
   const [paginaActual, setPaginaActual] = useState(1); // este estado sera el estado de mis paginas
   const [personajePorPagina, setpersonajePorPagina] = useState(8); // este sera el estado de cuantos personajes quiero por pagina
@@ -22,6 +29,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getDogs()); // dispatcheamos la funcion getDogs, cada vez que
+    dispatch(getTemperaments());
   }, [dispatch]); // lo que incluye en este arreglo es lo que hara que se active nuestro useEffect
 
   const handleClick = (evento) => {
@@ -30,44 +38,68 @@ export default function Home() {
     dispatch(getDogs());
   };
 
+  const handleClickOrderName = (evento) => {
+    evento.preventDefault();
+    dispatch(orderName(evento.target.value));
+  };
+
   return (
     <div>
       <Link to="/dogs">Crear Personaje</Link>
       <h1>Pettabit</h1>
       <button onClick={(e) => handleClick(e)}>recargar dogs</button>
-      <div>
-        <select>
-          <option value="ascendente">A - Z</option>
-          <option value="descendente">Z - A</option>
+      <SearchBar />
+
+      <div className="filterOrder">
+        <select
+          onChange={(e) => {
+            handleClickOrderName(e);
+          }}>
+          <option value="asc">A - Z</option>
+          <option value="des">Z - A</option>
         </select>
 
-        <select>
-          <option value="to">todos</option>
-          <option value="te">temperamento</option>
-          <option value="pe">peso</option>
-          <option value="es">esperanza de vida</option>
-          <option value="ta">tamaño</option>
-        </select>
+        <div className="filterTemperaments">
+          <select>
+            <option value="AllTemperaments">All</option>
+            {temperaments.map((el) => {
+              return (
+                <option value={el} key={el}>
+                  {el}
+                </option>
+              );
+            })}
+          </select>
+        </div>
 
         <select>
           <option value="todos">todos</option>
           <option value="api">api</option>
           <option value="creado">creados</option>
         </select>
+        {/*le paso props a mi componente Paginado*/}
 
-        {allDogs?.map((dog) => {
+        <Paginado
+          personajePorPagina={personajePorPagina}
+          allDogs={allDogs.length}
+          paginado={paginado}
+        />
+
+        {cuentaDogs?.map((dog) => {
           // para (?) ... si aldogs existe, hago el map
           return (
-            <fragment>
+            <div>
               <Link to={"/home/" + dog.id}>
                 {/* esto de aca es re importante, lo que hace es crear en nuestras cards, la posibilidad de dar click y re dirigirnos a c/u a una pg nueva con a traves de su id */}
                 <Card
                   name={dog.name} // pasamos props
                   image={dog.image} // pasamos props
                   temperament={dog.temperament} // pasamos props
+                  min_weight={dog.min_weight}
+                  max_weight={dog.max_weight}
                 />
               </Link>
-            </fragment>
+            </div>
           );
         })}
       </div>
