@@ -6,15 +6,6 @@ export default function SearchBar() {
   const [dogState, setDogState] = useState("");
   const dispatch = useDispatch();
 
-  document
-    .getElementsByClassName("inputSearch")
-    .addEventListener("keyup", function (event) {
-      if (event.code === "Enter") {
-        event.preventDefault();
-        document.querySelector("div").submit();
-      }
-    });
-
   function handleClick(e) {
     e.preventDefault();
 

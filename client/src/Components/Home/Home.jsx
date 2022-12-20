@@ -1,7 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react"; //HOOKS
 import { useDispatch, useSelector } from "react-redux"; //HOOKS REACT-REDUX
-import { getDogs, getTemperaments, orderName } from "../../Redux/Actions"; // traemos nuestro getDogs de actions(redux)
+import {
+  getDogs,
+  getTemperaments,
+  orderName,
+  filterCreated,
+} from "../../Redux/Actions"; // traemos nuestro getDogs de actions(redux)
 import { Link } from "react-router-dom"; // OJO ACA
 import Card from "../Card/Card";
 import Paginado from "../Paginado/Paginado";
@@ -32,15 +37,20 @@ export default function Home() {
     dispatch(getTemperaments());
   }, [dispatch]); // lo que incluye en este arreglo es lo que hara que se active nuestro useEffect
 
-  const handleClick = (evento) => {
+  const handleClick = (e) => {
     // aca lo que hacemos es crear una especie de disparador, que reinicie la peticion a los dogs
-    evento.preventDefault(); // pero no reinicia nuestro sitio web
+    e.preventDefault(); // pero no reinicia nuestro sitio web
     dispatch(getDogs());
   };
 
-  const handleClickOrderName = (evento) => {
-    evento.preventDefault();
-    dispatch(orderName(evento.target.value));
+  const handleClickOrderName = (e) => {
+    e.preventDefault();
+    dispatch(orderName(e.target.value));
+  };
+
+  const handleClickFilterCreated = (e) => {
+    e.preventDefault();
+    dispatch(filterCreated(e.target.value));
   };
 
   return (
@@ -72,11 +82,17 @@ export default function Home() {
           </select>
         </div>
 
-        <select>
-          <option value="todos">todos</option>
-          <option value="api">api</option>
-          <option value="creado">creados</option>
-        </select>
+        <div className="filterByCreatedOrApi">
+          <select
+            onChange={(e) => {
+              handleClickFilterCreated(e);
+            }}>
+            <option value="Todos">Todos</option>
+            <option value="Api">Api</option>
+            <option value="Created">Created</option>
+          </select>
+        </div>
+
         {/*le paso props a mi componente Paginado*/}
 
         <Paginado

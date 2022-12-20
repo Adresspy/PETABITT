@@ -3,11 +3,12 @@ import {
   GET_TEMPERAMENTS,
   GET_DOGS_BY_NAME,
   ORDER_BY_NAME,
+  FILTER_DOG_CREATED,
 } from "../Actions/Constantes/const";
 const inicialState = {
   // creo un estado inicial
-  allDogs: [],
   dogs: [],
+  allDogs: [],
   temperaments: [],
 };
 
@@ -58,6 +59,17 @@ const rootReducer = (state = inicialState, action) => {
       return {
         ...state,
         allDogs: orderArr,
+      };
+
+    case FILTER_DOG_CREATED:
+      const createdFilter =
+        action.payload === "Created"
+          ? state.dogs.filter((ele) => ele.createInDb)
+          : state.dogs.filter((ele) => !ele.createInDb);
+
+      return {
+        ...state,
+        allDogs: createdFilter,
       };
 
     default:

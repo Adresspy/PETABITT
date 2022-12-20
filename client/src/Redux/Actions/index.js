@@ -4,6 +4,7 @@ import {
   GET_TEMPERAMENTS,
   GET_DOGS_BY_NAME,
   ORDER_BY_NAME,
+  FILTER_DOG_CREATED,
 } from "./Constantes/const";
 import axios from "axios";
 //Aca hacemos nuestras action, para luego pasarlas al reducer
@@ -43,9 +44,19 @@ export function getTemperaments() {
 }
 
 export function orderName(payload) {
+  // nuestro payload sera la opcion que elijamos
   // dependiendo del payload
   return {
     type: ORDER_BY_NAME,
+    payload,
+  };
+}
+
+export function filterCreated(payload) {
+  // nuestro payload sera la opcion que elijamos
+  // dependiendo del payload
+  return {
+    type: FILTER_DOG_CREATED,
     payload,
   };
 }
