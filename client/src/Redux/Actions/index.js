@@ -5,6 +5,7 @@ import {
   GET_DOGS_BY_NAME,
   ORDER_BY_NAME,
   FILTER_DOG_CREATED,
+  CREATE_DOG,
 } from "./Constantes/const";
 import axios from "axios";
 //Aca hacemos nuestras action, para luego pasarlas al reducer
@@ -40,6 +41,21 @@ export function getTemperaments() {
       type: GET_TEMPERAMENTS,
       payload: temperamentList,
     });
+  };
+}
+
+export function PostCreateDog(payload) {
+  return async function (dispatch) {
+    const data = axios.post("http://localhost:3001/dogs", payload);
+    console.log(data);
+    return data;
+  };
+}
+
+export function getDogsByTemperament(payload) {
+  return {
+    type: FILTER_DOGS_BY_TEMPERAMENT,
+    payload,
   };
 }
 

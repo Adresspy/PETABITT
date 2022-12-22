@@ -6,6 +6,7 @@ import {
   getTemperaments,
   orderName,
   filterCreated,
+  getDogsByTemperament,
 } from "../../Redux/Actions"; // traemos nuestro getDogs de actions(redux)
 import { Link } from "react-router-dom"; // OJO ACA
 import Card from "../Card/Card";
@@ -14,7 +15,7 @@ import SearchBar from "../SearchBar/SearchBar";
 
 export default function Home() {
   const dispatch = useDispatch(); // creamos nuestro dispatcheador, que nos permitira conectar con nuestro reducer
-  const allDogs = useSelector((state) => state.allDogs); // y aca traemos nuestros perros, de nuestro estado (global)
+  const allDogs = useSelector((state) => state.dogs); // y aca traemos nuestros perros, de nuestro estado (global)
   const temperaments = useSelector((state) => state.temperaments).sort(
     (a, b) => {
       if (a < b) return -1;
@@ -41,6 +42,11 @@ export default function Home() {
     // aca lo que hacemos es crear una especie de disparador, que reinicie la peticion a los dogs
     e.preventDefault(); // pero no reinicia nuestro sitio web
     dispatch(getDogs());
+  };
+
+  const handleFilteredByTemp = (e) => {
+    e.preventDefault();
+    dispatch(getDogsByTemperament(e.target.value));
   };
 
   const handleClickOrderName = (e) => {
@@ -70,7 +76,7 @@ export default function Home() {
         </select>
 
         <div className="filterTemperaments">
-          <select>
+          <select onChange={(e) => handleFilteredByTemp(e)}>
             <option value="AllTemperaments">All</option>
             {temperaments.map((el) => {
               return (
